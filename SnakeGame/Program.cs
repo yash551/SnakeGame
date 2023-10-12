@@ -1,6 +1,7 @@
 
 
 using System.Configuration;
+using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Timer = System.Windows.Forms.Timer;
 
@@ -35,6 +36,8 @@ namespace SnakeGame
         private int formYCoordinate = 50;
 
         private Timer timer;
+        
+        
         public SnakeGame()
         {
             snake = new List<Point>();
@@ -42,28 +45,55 @@ namespace SnakeGame
             GenerateTarget();
 
             timer = new Timer();
-            timer.Interval = 1000;
+            timer.Interval = 200;
             timer.Tick += Update;//deligate function
             timer.Start();
+
+            this.KeyDown += OnKeyDown;
+
+            //this.MinimizeBox = true;
+            //this.MaximizeBox = true;
+            //this.Width = formXCoordinate;
+            //this.Height = formYCoordinate;
         }
 
         //generate random targets
         public void GenerateTarget()
         {
             Random random = new Random();
-            target = new Point(random.Next(formXCoordinate), random.Next(formYCoordinate));
+            target = new Point(random.Next(gridSize), random.Next(gridSize));
         }
 
+        private void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+
+                case Keys.Up:
+                    direction = Directions.Up;
+                    break;
+                case Keys.Down:
+                    direction = Directions.Down;
+                    break;
+                case Keys.Left:
+                    direction = Directions.Left;
+                    break;
+                case Keys.Right:
+                    direction = Directions.Right;
+                    break;
+            }
+        }
+        
         private void Update(object sender, EventArgs e)
         {
             Point newHead = snake.First();
             switch(direction) 
             { 
                 case Directions.Up:
-                    newHead = new Point(newHead.X, newHead.Y+1); 
+                    newHead = new Point(newHead.X, newHead.Y-1); 
                     break;
                 case Directions.Down:
-                    newHead = new Point(newHead.X, newHead.Y-1);
+                    newHead = new Point(newHead.X, newHead.Y+1);
                     break;
                 case Directions.Left:
                     newHead = new Point(newHead.X-1, newHead.Y);
